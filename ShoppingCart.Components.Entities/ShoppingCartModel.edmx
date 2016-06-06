@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="ShoppingDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CartDetails">
+          <Key>
+            <PropertyRef Name="Cart_ID" />
+          </Key>
+          <Property Name="Cart_ID" Type="int" Nullable="false" />
+          <Property Name="Item_ID" Type="int" />
+          <Property Name="qty" Type="int" />
+          <Property Name="Added_Date" Type="datetime" />
+          <Property Name="AddedBy" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="ItemDetails">
+          <Key>
+            <PropertyRef Name="Item_ID" />
+          </Key>
+          <Property Name="Item_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Item_Name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Item_price" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="Image_Name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="AddedBy" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_ItemDetailDetail">
+          <End Role="ItemDetails" Type="Self.ItemDetails" Multiplicity="0..1" />
+          <End Role="CartDetails" Type="Self.CartDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemDetails">
+              <PropertyRef Name="Item_ID" />
+            </Principal>
+            <Dependent Role="CartDetails">
+              <PropertyRef Name="Item_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ShoppingDBModelStoreContainer">
+          <EntitySet Name="CartDetails" EntityType="Self.CartDetails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ItemDetails" EntityType="Self.ItemDetails" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ItemDetailDetail" Association="Self.FK_ItemDetailDetail">
+            <End Role="ItemDetails" EntitySet="ItemDetails" />
+            <End Role="CartDetails" EntitySet="CartDetails" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ShoppingDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="CartDetail">
+          <Key>
+            <PropertyRef Name="Cart_ID" />
+          </Key>
+          <Property Name="Cart_ID" Type="Int32" Nullable="false" />
+          <Property Name="Item_ID" Type="Int32" />
+          <Property Name="qty" Type="Int32" />
+          <Property Name="Added_Date" Type="DateTime" Precision="3" />
+          <Property Name="AddedBy" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ItemDetail" Relationship="Self.FK_ItemDetailDetail" FromRole="CartDetails" ToRole="ItemDetails" />
+        </EntityType>
+        <EntityType Name="ItemDetail">
+          <Key>
+            <PropertyRef Name="Item_ID" />
+          </Key>
+          <Property Name="Item_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Item_Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Item_price" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="Image_Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="AddedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="CartDetails" Relationship="Self.FK_ItemDetailDetail" FromRole="ItemDetails" ToRole="CartDetails" />
+        </EntityType>
+        <Association Name="FK_ItemDetailDetail">
+          <End Role="ItemDetails" Type="Self.ItemDetail" Multiplicity="0..1" />
+          <End Role="CartDetails" Type="Self.CartDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemDetails">
+              <PropertyRef Name="Item_ID" />
+            </Principal>
+            <Dependent Role="CartDetails">
+              <PropertyRef Name="Item_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ShoppingDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CartDetails" EntityType="Self.CartDetail" />
+          <EntitySet Name="ItemDetails" EntityType="Self.ItemDetail" />
+          <AssociationSet Name="FK_ItemDetailDetail" Association="Self.FK_ItemDetailDetail">
+            <End Role="ItemDetails" EntitySet="ItemDetails" />
+            <End Role="CartDetails" EntitySet="CartDetails" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ShoppingDBModelStoreContainer" CdmEntityContainer="ShoppingDBEntities">
+          <EntitySetMapping Name="CartDetails">
+            <EntityTypeMapping TypeName="ShoppingDBModel.CartDetail">
+              <MappingFragment StoreEntitySet="CartDetails">
+                <ScalarProperty Name="Cart_ID" ColumnName="Cart_ID" />
+                <ScalarProperty Name="Item_ID" ColumnName="Item_ID" />
+                <ScalarProperty Name="qty" ColumnName="qty" />
+                <ScalarProperty Name="Added_Date" ColumnName="Added_Date" />
+                <ScalarProperty Name="AddedBy" ColumnName="AddedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ItemDetails">
+            <EntityTypeMapping TypeName="ShoppingDBModel.ItemDetail">
+              <MappingFragment StoreEntitySet="ItemDetails">
+                <ScalarProperty Name="Item_ID" ColumnName="Item_ID" />
+                <ScalarProperty Name="Item_Name" ColumnName="Item_Name" />
+                <ScalarProperty Name="Item_price" ColumnName="Item_price" />
+                <ScalarProperty Name="Image_Name" ColumnName="Image_Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="AddedBy" ColumnName="AddedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

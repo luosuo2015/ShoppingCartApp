@@ -1,0 +1,134 @@
+﻿
+@{
+    ViewBag.Title = "AddItem";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div ng-app="theApp">
+    <div>
+        <div>
+            <img src="~/Images/blank.gif" alt="" width="1" height="10" />
+            <div class="table" style="border-bottom:3px solid #3273d5;">
+                <div class="row">
+                    <div class="col-sm-3">Welcome Karen</div>
+                    <div class="col-sm-6"><h3>Shopping Cart Using AngularJS, MVC and WCF</h3></div>
+                    <div class="col-sm-3">Today date is: {{date | date:'yyyy-MM-dd'}}</div>
+                </div>
+            </div>
+        </div>
+
+        <div ng-controller="addItemCtrl">
+            <img src="~/Images/blank.gif" alt="" width="1" height="10" />
+            <table id="additemContainer" style="width:99%; table-layout:fixed;">
+                <tr>
+                    <td>
+                        <table style="background-color: #FFFFFF; border: dashed 3px #6D7B8D; padding:5px; width: 99%; table-layout:fixed;">
+                          <tr style="height:50px; background-color: #336699; color:#FFFFFF; border: solid 1px #659EC7;">
+                             <td><h3>Item Management - Add New Items / Upload Image for Item</h3></td>
+                          </tr>
+                          <tr>
+                              <td>
+                                  <form novalidate name="addItemFrm" ng-submit="saveFile()">
+                                      <table style="color:#9F000F; font-size:large; border-spacing: 20px;">
+                                          <tr >
+                                              <td style="padding: 10px;"><b>Item Code</b>:</td>
+                                              <td><input type="text" name="txtitemID" ng-model="Frmitem.itemID" value="0" readonly /></td>
+                                              <td><b>Item Name</b>:</td>
+                                              <td><input type="text" name="txtitemName" ng-model="Frmitem.itemName" placeholder="Item Name..." required />
+                                                  <span class="error" ng-show="(addItemFrm.file.$dirty || IsFormSubmitted)&& addItemFrm.txtitemName.$error.required">Item Name required.</span>
+                                              <br/></td>
+                                              <td rowspan="3" style="">
+                                                  <input type="submit" value="Save  Item" style="background-color:#336699; color:#FFFFFF;"/> <br/>
+                                                  <input type="reset"  value="Clear Form" ng-click="clearForm()" style="margin:5px 0 0 0;background-color:#336699; color:#FFFFFF;" /> <br />
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                              <td><b>Item Price</b>:</td>
+                                              <td><input type="text" name="txtitemPrice" ng-model="Frmitem.itemPrice" value="0" placeholder="Item Price..." />
+                                                  <span class="error" ng-show="(addItemFrm.file.$dirty || IsFormSubmitted)&& addItemFrm.txtitemPrice.$error.required">Item Price required.</span>
+                                                  <br /></td>
+                                              <td><b>Description</b>:</td>
+                                              <td><input type="text" name="txtdescription" ng-model="Frmitem.description" value="0" placeholder="Description..." required />
+                                                  <span class="error" ng-show="(addItemFrm.file.$dirty || IsFormSubmitted)&& addItemFrm.txtdescription.$error.required">txtdescription required.</span>
+                                                  <br /></td>
+                                          </tr>
+                                          <tr>
+                                              <td><b>Added By</b>:</td>
+                                              <td><input type="text" name="txtaddedBy" ng-model="Frmitem.addedBy" value="0" placeholder="Added by..." />
+                                                  <span class="error" ng-show="(addItemFrm.file.$dirty || IsFormSubmitted)&& addItemFrm.txtaddedBy.$error.required">User Name required.</span>
+                                                  <br /></td>
+                                              <td><b>Image Name</b>:</td>
+                                              <td style="color:white;">
+                                                  <div style="position: absolute;right: 10px;color: black;">{{Frmitem.imageName}}</div>
+                                                  <input type="file" name="file" accept="image/*" value="Upload File" placeholder="Image Name..." onchange="angular.element(this).scope().setFile(this.files)" required /><br />
+                                              </td>
+                                              @*<td ng-show="addmode">
+                                                  <input type="file" name="file" accept="image/*" value="Upload File" placeholder="Image Name..." onchange="angular.element(this).scope().setFile(this.files)" required /><br />
+                                              </td>*@
+                                          </tr>
+                                      </table>
+                                      
+                                  </form>
+                              </td>
+                          </tr>
+                        </table>
+                    </td>
+                </tr>
+                 <tr></tr>
+                <tr>
+                    <td>
+                        <img src="~/Images/blank.gif" alt="" width="1" height="10"/>
+                        <div style="height: 350px; overflow-y:auto;width:99%;">
+                            <table style="background-color:#FFFFFF; border:solid 2px #6D7B8D;padding:5px;width:99%; height:200px;">
+                                <thead>
+                                    <tr>
+                                        <td colspan="6" align="right">
+                                            <input type="button" value="Click for My Shopping Cart Items"
+                                                   style="background-color:#4C792D; color:#FFFFFF; font-size:large;" ng-click="dispCart()" />
+                                        </td>
+                                    </tr>
+                                    <tr style="height:30px; background-color: #336699; color:#FFFFFF; border:solid 1px #659EC7;">
+                                        <td width="40" align="center"><b>Image</b></td>
+                                        <td width="40" align="center" style="border:solid 1px #FFFFFF;"><b>Item Code</b></td>
+                                        <td width="100" align="center" style="border:solid 1px #FFFFFF;"><b>Item Name</b></td>
+                                        <td width="120" align="center" style="border:solid 1px #FFFFFF;"><b>Description</b></td>
+                                        <td width="60" align="center" style="border: solid 1px #FFFFFF;"><b>Price</b></td>
+                                        <td width="70" align="center"><b>User Name</b></td>
+                                    </tr>
+                                    <tr style="height:30px; background-color: #336699; color:#FFFFFF; border:solid 1px #659EC7;">
+                                        <td width="40" align="center"><b>Filter by</b></td>
+                                        <td width="40" align="center" style="border:solid 1px #FFFFFF;"><input style="width:100px;" ng-model="search.itemID" placeholder="Item Code" /></td>
+                                        <td width="100" align="center" style="border:solid 1px #FFFFFF;"><input style="width:100px;" ng-model="search.itemName" placeholder="Item Name" /></td>
+                                        <td width="120" align="center" style="border:solid 1px #FFFFFF;"><input style="width:100px;" ng-model="search.description" placeholder="Description" /></td>
+                                        <td width="60" align="center" style="border: solid 1px #FFFFFF;"><input style="width:100px;" ng-model="search.price" placeholder="Price" /></td>
+                                        <td width="70" align="center"><input style="width:100px;" ng-model="search.addedBy" placeholder="User Name" /></td>
+                                    </tr>
+                                </thead>
+                                <tbody ng-repeat="one in lists">
+                                    <tr>
+                                        <td align="center" style="border:solid 1px #659EC7;">
+                                            <img src="~/Images/{{one.imageName}}" alt="{{one.itemName}}"
+                                                 style="width:48px; height:48px;" ng-click="editItem(one)"/>
+                                        </td>
+                                        <td align="center" style="border:solid 1px #659EC7;">{{one.itemID}}</td>
+                                        <td align="center" style="border:solid 1px #659EC7;">{{one.itemName}}</td>
+                                        <td align="center" style="border:solid 1px #659EC7;">{{one.description}}</td>
+                                        <td align="center" style="border:solid 1px #659EC7;">{{one.itemPrice|number:0}}</td>
+                                        <td align="center" style="border:solid 1px #659EC7;">{{one.addedBy}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/Libs/angular.js"></script>
+<script src="~/Scripts/Libs/angular.min.js"></script>
+<script src="~/Scripts/Libs/angular-file-upload.min.js"></script>
+<script src="~/Scripts/angularjs/app.js"></script>
+<script src="~/Scripts/angularjs/model.js"></script>
+<script src="~/Scripts/angularjs/controllers.js"></script>
+

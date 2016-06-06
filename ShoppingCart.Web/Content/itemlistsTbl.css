@@ -1,0 +1,10 @@
+﻿table.scroll tbody,
+table.scroll thead { 
+    display: block;    
+}
+
+table.scroll tbody {
+    height: 100px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
